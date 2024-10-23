@@ -28,8 +28,8 @@ class Player {
       moveY += 1;
     }
 
-    this.xPos += moveX * this.speed * deltaTime;
-    this.yPos += moveY * this.speed * deltaTime;
+    this.xPos += moveX * this.speed;
+    this.yPos += moveY * this.speed;
   }
 
   drawPlayer() {
@@ -49,7 +49,8 @@ function mouseClicked() {
       "blue",
       player.xPos,
       player.yPos,
-      0.01
+      0.001,
+      30
     )
   );
 }

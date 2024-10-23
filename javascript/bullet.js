@@ -1,7 +1,16 @@
 let bullets = [];
 
 class Bullet {
-  constructor(size, vectorX, vectorY, color, originX, originY, bulletSpeed) {
+  constructor(
+    size,
+    vectorX,
+    vectorY,
+    color,
+    originX,
+    originY,
+    bulletSpeed,
+    damageAmount
+  ) {
     this.size = size;
     this.vectorX = vectorX;
     this.vectorY = vectorY;
@@ -10,6 +19,7 @@ class Bullet {
     this.yPos = originY;
     this.bulletSpeed = bulletSpeed;
     this.bounces = 0;
+    this.damageAmount = damageAmount;
   }
 
   moveBullet() {
@@ -33,6 +43,7 @@ class Bullet {
       return;
     }
 
+    // Consistent movement based on bulletSpeed and deltaTime
     this.xPos += this.vectorX * this.bulletSpeed * deltaTime;
     this.yPos += this.vectorY * this.bulletSpeed * deltaTime;
   }

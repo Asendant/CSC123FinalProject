@@ -1,50 +1,55 @@
+// Tileset variables
 let grid = []; // 2D array to store the grid
 let cols = 8;
 let rows = 8;
 let tileSize;
 
+// Canvas Variables
 const [WIDTH, HEIGHT] = [600, 600];
 
+// Class Variables
 let player;
-let enemyExample;
-let bullet;
 
 function setup() {
   createCanvas(WIDTH, HEIGHT);
-  player = new Player(20, 20, 0.25, color(29, 255, 13), WIDTH / 2, HEIGHT / 2);
 
-  enemyExample = new Enemy(
-    30,
-    30,
-    WIDTH / 2 + 200,
-    HEIGHT / 2 + 200,
-    "red",
-    100,
-    player,
-    0.2
-  );
+  player = new Player(20, 20, 5, color(29, 255, 13), WIDTH / 2, HEIGHT / 2);
+
+  frameRate(45);
+
+  SpawnEnemies();
+  setInterval(SpawnEnemies, 10000);
 }
 
 function draw() {
   background(220);
-
-  console.log(bullets);
 
   drawGrid();
 
   player.movePlayer();
   player.drawPlayer();
 
-  enemyExample.drawEnemy();
-  enemyExample.moveToPlayer();
-
   if (bullets.length > 0) {
-    bullets.map((bullet, index) => {
+    bullets.forEach((bullet, index) => {
       bullet.moveBullet();
       bullet.drawBullet();
-      if (bullet.getBounces() >= 3) bullets.pop(index);
+      if (bullet.getBounces() >= 3) bullets.splice(index, 1);
     });
   }
+
+  if (enemies.length > 0) {
+    enemies.map((enemy, index) => {
+      enemy.moveToPlayer();
+      enemy.drawEnemy();
+
+      if (enemy.health <= 0) {
+        enemies.splice(index, 1);
+      }
+    });
+  }
+
+  updateGrid();
+  checkCollisions();
 }
 
 function drawGrid() {
