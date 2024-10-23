@@ -12,6 +12,7 @@ class Player {
 
   movePlayer() {
     let moveX = 0;
+    let moveY = 0;
 
     if (keyIsDown(65)) {
       moveX -= 1;
@@ -19,8 +20,15 @@ class Player {
     if (keyIsDown(68)) {
       moveX += 1;
     }
+    if (keyIsDown(87)){
+      moveY -= 1;
+    }
+    if (keyIsDown(83)){
+      moveY += 1;
+    }
 
     this.xPos += moveX * this.speed * deltaTime;
+    this.yPos += moveY * this.speed * deltaTime;
   }
 
   drawPlayer() {
