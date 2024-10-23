@@ -7,6 +7,7 @@ const [WIDTH, HEIGHT] = [600, 600];
 
 let player;
 let enemyExample;
+let bullet;
 
 function setup() {
   createCanvas(WIDTH, HEIGHT);
@@ -27,6 +28,8 @@ function setup() {
 function draw() {
   background(220);
 
+  console.log(bullets);
+
   drawGrid();
 
   player.movePlayer();
@@ -34,6 +37,14 @@ function draw() {
 
   enemyExample.drawEnemy();
   enemyExample.moveToPlayer();
+
+  if (bullets.length > 0) {
+    bullets.map((bullet, index) => {
+      bullet.moveBullet();
+      bullet.drawBullet();
+      if (bullet.getBounces() >= 3) bullets.pop(index);
+    });
+  }
 }
 
 function drawGrid() {

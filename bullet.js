@@ -1,3 +1,5 @@
+let bullets = [];
+
 class Bullet {
   constructor(size, vectorX, vectorY, color, originX, originY, bulletSpeed) {
     this.size = size;
@@ -37,7 +39,7 @@ class Bullet {
 
   drawBullet() {
     push();
-    fill(color);
+    fill(this.color);
     circle(this.xPos, this.yPos, this.size);
     pop();
   }
