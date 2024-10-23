@@ -20,32 +20,43 @@ class Bullet {
     this.bulletSpeed = bulletSpeed;
     this.bounces = 0;
     this.damageAmount = damageAmount;
+
+    this.initialDistance = 0; // Track the distance traveled since firing
+    this.ignorePlayerCollisionDistance = 50; // Distance before it can hit the player
   }
 
   moveBullet() {
-    if (
-      this.xPos + this.vectorX * this.bulletSpeed * deltaTime > WIDTH ||
-      this.xPos + this.vectorX * this.bulletSpeed * deltaTime < 0
-    ) {
+    let movementX = this.vectorX * this.bulletSpeed * deltaTime;
+    let movementY = this.vectorY * this.bulletSpeed * deltaTime;
+
+    // Update the bullet's position
+    this.xPos += movementX;
+    this.yPos += movementY;
+
+    // Update the distance the bullet has traveled
+    this.initialDistance += Math.sqrt(
+      movementX * movementX + movementY * movementY
+    );
+
+    // Clamp bullet position to prevent it from going out of the grid bounds
+    this.xPos = constrain(this.xPos, 0, WIDTH);
+    this.yPos = constrain(this.yPos, 0, HEIGHT);
+
+    // Check for bounces
+    if (this.xPos >= WIDTH || this.xPos <= 0) {
       this.vectorX = -this.vectorX;
       this.bounces += 1;
     }
 
-    if (
-      this.yPos + this.vectorY * this.bulletSpeed * deltaTime > HEIGHT ||
-      this.yPos + this.vectorY * this.bulletSpeed * deltaTime < 0
-    ) {
+    if (this.yPos >= HEIGHT || this.yPos <= 0) {
       this.vectorY = -this.vectorY;
       this.bounces += 1;
     }
 
+    // Stop the bullet after 3 bounces
     if (this.bounces >= 3) {
       return;
     }
-
-    // Consistent movement based on bulletSpeed and deltaTime
-    this.xPos += this.vectorX * this.bulletSpeed * deltaTime;
-    this.yPos += this.vectorY * this.bulletSpeed * deltaTime;
   }
 
   drawBullet() {
@@ -57,5 +68,10 @@ class Bullet {
 
   getBounces() {
     return this.bounces;
+  }
+
+  // Check if the bullet has traveled enough distance to collide with the player
+  canCollideWithPlayer() {
+    return this.initialDistance > this.ignorePlayerCollisionDistance;
   }
 }

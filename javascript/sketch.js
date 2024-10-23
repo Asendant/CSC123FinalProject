@@ -13,7 +13,15 @@ let player;
 function setup() {
   createCanvas(WIDTH, HEIGHT);
 
-  player = new Player(20, 20, 5, color(29, 255, 13), WIDTH / 2, HEIGHT / 2);
+  player = new Player(
+    20,
+    20,
+    5,
+    color(29, 255, 13),
+    WIDTH / 2,
+    HEIGHT / 2,
+    100
+  );
 
   frameRate(45);
 

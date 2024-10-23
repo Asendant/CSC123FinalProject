@@ -3,7 +3,7 @@ let enemies = [];
 let enemyMultiplier = 1;
 
 function SpawnEnemies() {
-  for (let i = 0; i < enemyMultiplier * 5; i++) {
+  for (let i = 0; i < Math.floor(Math.pow(1.5, enemyMultiplier)); i++) {
     let newEnemy = new Enemy(
       30,
       30,

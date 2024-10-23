@@ -51,6 +51,14 @@ function checkCollisions() {
       ) {
         let bullet = cell.bullets[bulletIndex];
 
+        // Check if the bullet can collide with the player
+        if (bullet.canCollideWithPlayer() && checkCollision(bullet, player)) {
+          player.takeDamage(bullet.damageAmount); // Damage the player
+          bullets.splice(bulletIndex, 1); // Remove bullet
+          continue; // Move to the next bullet
+        }
+
+        // Check for bullet and enemy collision
         for (
           let enemyIndex = cell.enemies.length - 1;
           enemyIndex >= 0;
@@ -59,11 +67,15 @@ function checkCollisions() {
           let enemy = cell.enemies[enemyIndex];
 
           if (checkCollision(bullet, enemy)) {
-            // Handle collision
+            // Handle collision with enemy
             enemy.damage(bullet.damageAmount);
-            // Remove bullet after collision
             bullets.splice(bullets.indexOf(bullet), 1);
-            break; // Exit the loop once the bullet hits an enemy
+            break; // Exit loop once bullet hits enemy
+          }
+
+          // Check if the enemy collides with the player
+          if (checkCollision(enemy, player)) {
+            player.damage(10); // Example damage from enemies
           }
         }
       }
@@ -72,11 +84,11 @@ function checkCollisions() {
 }
 
 // Simple bounding box collision check
-function checkCollision(bullet, enemy) {
+function checkCollision(obj1, obj2) {
   return (
-    bullet.xPos < enemy.xPos + enemy.sizeX &&
-    bullet.xPos + bullet.size > enemy.xPos &&
-    bullet.yPos < enemy.yPos + enemy.sizeY &&
-    bullet.yPos + bullet.size > enemy.yPos
+    obj1.xPos < obj2.xPos + obj2.sizeX &&
+    obj1.xPos + obj1.size > obj2.xPos &&
+    obj1.yPos < obj2.yPos + obj2.sizeY &&
+    obj1.yPos + obj1.size > obj2.yPos
   );
 }
