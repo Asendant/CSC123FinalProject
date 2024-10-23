@@ -7,7 +7,6 @@ const [WIDTH, HEIGHT] = [600, 600];
 
 let player;
 let enemyExample;
-let enemyExample2;
 
 function setup() {
   createCanvas(WIDTH, HEIGHT);
