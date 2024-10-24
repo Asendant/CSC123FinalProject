@@ -26,7 +26,6 @@ function setup() {
   frameRate(45);
 
   SpawnEnemies();
-  setInterval(SpawnEnemies, 5000);
 }
 
 function draw() {
@@ -52,6 +51,9 @@ function draw() {
 
       if (enemy.health <= 0) {
         enemies.splice(index, 1);
+        if (enemies.length <= 0) {
+          setTimeout(SpawnEnemies, 5000);
+        }
       }
     });
   }

@@ -3,8 +3,7 @@ let enemies = [];
 let enemyMultiplier = 1;
 
 function SpawnEnemies() {
-  if (enemies.length > 2) return;
-
+  if (enemies.length >= 1) return;
   for (let i = 0; i < Math.floor(Math.pow(1.5, enemyMultiplier)); i++) {
     let enemyType = Math.round(random(1, 2));
     let newEnemy;
