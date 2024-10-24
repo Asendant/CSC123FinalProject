@@ -33,6 +33,13 @@ function draw() {
 
   drawGrid();
 
+  fill("black");
+  text(
+    `${enemies.length} enem${enemies.length === 1 ? "y" : "ies"}`,
+    WIDTH - 50,
+    50
+  );
+
   player.movePlayer();
   player.drawPlayer();
 
