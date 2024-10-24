@@ -3,6 +3,7 @@ let enemies = [];
 let enemyMultiplier = 1;
 
 function SpawnEnemies() {
+  console.log("Time til next wave: ");
   for (let i = 0; i < Math.floor(Math.pow(1.5, enemyMultiplier)); i++) {
     let newEnemy = new Enemy(
       30,
@@ -94,6 +95,17 @@ class Enemy {
       yDirectionToMove /= distance;
     }
 
+    if (
+      dist(
+        this.xPos,
+        this.yPos,
+        this.playerObject.xPos,
+        this.playerObject.yPos
+      ) < 35
+    ) {
+      this.playerObject.takeDamage(2);
+      return;
+    }
     // Update the position of the enemy based on the move speed
     this.xPos += xDirectionToMove * deltaTime * this.moveSpeed;
     this.yPos += yDirectionToMove * deltaTime * this.moveSpeed;

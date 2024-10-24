@@ -75,7 +75,7 @@ function checkCollisions() {
 
           // Check if the enemy collides with the player
           if (checkCollision(enemy, player)) {
-            player.damage(10); // Example damage from enemies
+            player.damage(20); // Example damage from enemies
           }
         }
       }
