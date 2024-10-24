@@ -66,7 +66,7 @@ function checkCollisions() {
         ) {
           let enemy = cell.enemies[enemyIndex];
 
-          if (checkCollision(bullet, enemy)) {
+          if (bullet.canCollideWithPlayer() && checkCollision(bullet, enemy)) {
             // Handle collision with enemy
             enemy.damage(bullet.damageAmount);
             bullets.splice(bullets.indexOf(bullet), 1);

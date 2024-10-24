@@ -26,7 +26,7 @@ function setup() {
   frameRate(45);
 
   SpawnEnemies();
-  setInterval(SpawnEnemies, 10000);
+  setInterval(SpawnEnemies, 5000);
 }
 
 function draw() {

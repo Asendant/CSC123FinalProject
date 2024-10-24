@@ -3,18 +3,34 @@ let enemies = [];
 let enemyMultiplier = 1;
 
 function SpawnEnemies() {
-  console.log("Time til next wave: ");
+  if (enemies.length > 2) return;
+
   for (let i = 0; i < Math.floor(Math.pow(1.5, enemyMultiplier)); i++) {
-    let newEnemy = new Enemy(
-      30,
-      30,
-      random(100, WIDTH - 100),
-      random(100, HEIGHT - 100),
-      "red",
-      100,
-      player,
-      random(0.05, 0.1)
-    );
+    let enemyType = Math.round(random(1, 2));
+    let newEnemy;
+    if (enemyType == 1) {
+      newEnemy = new Enemy(
+        30,
+        30,
+        random(100, WIDTH - 100),
+        random(100, HEIGHT - 100),
+        "red",
+        100,
+        player,
+        random(0.05, 0.1)
+      );
+    } else if (enemyType == 2) {
+      newEnemy = new ShooterEnemy(
+        30,
+        30,
+        random(100, WIDTH - 100),
+        random(100, HEIGHT - 100),
+        "yellow",
+        75,
+        player,
+        random(0.03, 0.05)
+      );
+    }
 
     // Check distance between new enemy and player
     if (dist(newEnemy.xPos, newEnemy.yPos, player.xPos, player.yPos) < 100) {
