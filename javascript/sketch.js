@@ -16,14 +16,14 @@ function setup() {
   player = new Player(
     20,
     20,
-    5,
+    0.2,
     color(29, 255, 13),
     WIDTH / 2,
     HEIGHT / 2,
     100
   );
 
-  frameRate(45);
+  frameRate(75);
 
   SpawnEnemies();
 }
@@ -53,7 +53,7 @@ function draw() {
 
   if (enemies.length > 0) {
     enemies.map((enemy, index) => {
-      enemy.moveToPlayer();
+      enemy.moveEnemy();
       enemy.drawEnemy();
 
       if (enemy.health <= 0) {

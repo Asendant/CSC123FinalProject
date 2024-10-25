@@ -5,7 +5,7 @@ let enemyMultiplier = 1;
 function SpawnEnemies() {
   if (enemies.length >= 1) return;
   for (let i = 0; i < Math.floor(Math.pow(1.5, enemyMultiplier)); i++) {
-    let enemyType = Math.round(random(1, 2));
+    let enemyType = Math.round(random(1, 3));
     let newEnemy;
     if (enemyType == 1) {
       newEnemy = new Enemy(
@@ -30,9 +30,21 @@ function SpawnEnemies() {
         random(0.03, 0.05)
       );
     }
+    else if (enemyType == 3) {
+      newEnemy = new WanderingEnemy(
+        30,
+        30,
+        random(100, WIDTH - 100),
+        random(100, HEIGHT - 100),
+        "orange",
+        100,
+        player,
+        random(0.07, 0.1)
+      )
+    }
 
     // Check distance between new enemy and player
-    if (dist(newEnemy.xPos, newEnemy.yPos, player.xPos, player.yPos) < 100) {
+    if (dist(newEnemy.xPos, newEnemy.yPos, player.xPos, player.yPos) < 200) {
       i -= 1;
       continue;
     }
@@ -96,7 +108,7 @@ class Enemy {
     pop();
   }
 
-  moveToPlayer() {
+  moveEnemy() {
     // Calculate the direction vector
     let xDirectionToMove = this.playerObject.xPos - this.xPos;
     let yDirectionToMove = this.playerObject.yPos - this.yPos;

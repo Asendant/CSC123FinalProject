@@ -19,7 +19,7 @@ class ShooterEnemy extends Enemy {
     super.drawEnemy();
   }
 
-  moveToPlayer() {
+  moveEnemy() {
     // Calculate the direction vector
     let xDirectionToMove = this.playerObject.xPos - this.xPos;
     let yDirectionToMove = this.playerObject.yPos - this.yPos;

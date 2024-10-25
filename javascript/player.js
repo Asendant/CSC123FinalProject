@@ -29,8 +29,8 @@ class Player {
       moveY += 1;
     }
 
-    this.xPos += moveX * this.speed;
-    this.yPos += moveY * this.speed;
+    this.xPos += moveX * this.speed * deltaTime;
+    this.yPos += moveY * this.speed * deltaTime;
   }
 
   drawPlayer() {
