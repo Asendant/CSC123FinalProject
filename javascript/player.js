@@ -16,16 +16,16 @@ class Player {
     let moveX = 0;
     let moveY = 0;
 
-    if (keyIsDown(65)) {
+    if (keyIsDown(65) && this.xPos - 1 > 0) {
       moveX -= 1;
     }
-    if (keyIsDown(68)) {
+    if (keyIsDown(68) && this.xPos + 1 < WIDTH - this.sizeX) {
       moveX += 1;
     }
-    if (keyIsDown(87)) {
+    if (keyIsDown(87) && this.yPos - 1 > 0){
       moveY -= 1;
     }
-    if (keyIsDown(83)) {
+    if (keyIsDown(83) && this.yPos + 1 < HEIGHT - this.sizeY){
       moveY += 1;
     }
 
