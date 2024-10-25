@@ -40,6 +40,8 @@ function draw() {
     50
   );
 
+  text(`Round: ${enemyMultiplier}`, 10, 25);
+
   player.movePlayer();
   player.drawPlayer();
 
