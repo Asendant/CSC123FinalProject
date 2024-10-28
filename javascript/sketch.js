@@ -26,8 +26,12 @@ function setup() {
   frameRate(75);
 
   SpawnEnemies();
+
+  // Call the function every 15 seconds (15000 milliseconds)
+  // setInterval(SpawnSupply, 10000);
 }
 
+// Remove cleanup of collected supply drops from draw loop in draw()
 function draw() {
   background(220);
 
@@ -66,6 +70,13 @@ function draw() {
       }
     });
   }
+
+  // Draw and update supply drops
+  supplyDrops.forEach((supplyDrop) => {
+    if (!supplyDrop.hasBeenPickedUp) {
+      supplyDrop.drawSupply();
+    }
+  });
 
   updateGrid();
   checkCollisions();

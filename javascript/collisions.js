@@ -14,7 +14,7 @@ let collisionsGrid = Array(Math.ceil(WIDTH / cellSize))
   .map(() =>
     Array(Math.ceil(HEIGHT / cellSize))
       .fill()
-      .map(() => ({ bullets: [], enemies: [] }))
+      .map(() => ({ bullets: [], enemies: [], supplyDrops: [] }))
   );
 
 function updateGrid() {
@@ -36,6 +36,11 @@ function updateGrid() {
   enemies.forEach((enemy) => {
     const cell = getGridCell(enemy.xPos, enemy.yPos);
     collisionsGrid[cell.col][cell.row].enemies.push(enemy);
+  });
+
+  supplyDrops.forEach((supplyDrop) => {
+    const cell = getGridCell(supplyDrop.xPos, supplyDrop.yPos);
+    collisionsGrid[cell.col][cell.row].supplyDrops.push(supplyDrop);
   });
 }
 
@@ -76,6 +81,21 @@ function checkCollisions() {
           // Check if the enemy collides with the player
           if (checkCollision(enemy, player)) {
             player.damage(20); // Example damage from enemies
+          }
+        }
+
+        for (
+          let supplyDropIndex = cell.supplyDrops.length - 1;
+          supplyDropIndex >= 0;
+          supplyDropIndex--
+        ) {
+          let supplyDrop = cell.supplyDrops[supplyDropIndex];
+
+          console.log(checkCollision(supplyDrop, player));
+
+          if (checkCollision(supplyDrop, player)) {
+            console.log("Collected");
+            supplyDrop.hasBeenPickedUp = true;
           }
         }
       }

@@ -29,8 +29,7 @@ function SpawnEnemies() {
         player,
         random(0.03, 0.05)
       );
-    }
-    else if (enemyType == 3) {
+    } else if (enemyType == 3) {
       newEnemy = new WanderingEnemy(
         30,
         30,
@@ -40,7 +39,7 @@ function SpawnEnemies() {
         100,
         player,
         random(0.07, 0.1)
-      )
+      );
     }
 
     // Check distance between new enemy and player
@@ -130,7 +129,7 @@ class Enemy {
         this.playerObject.yPos
       ) < 35
     ) {
-      this.playerObject.takeDamage(2);
+      this.playerObject.damage(2);
       return;
     }
     // Update the position of the enemy based on the move speed

@@ -63,7 +63,7 @@ class Player {
   }
 
   // Function to apply damage to the player
-  takeDamage(amount) {
+  damage(amount) {
     this.health -= amount;
     if (this.health <= 0) {
       this.health = 0; // Prevent health from going negative
