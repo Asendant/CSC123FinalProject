@@ -58,7 +58,7 @@ function checkCollisions() {
 
         // Check if the bullet can collide with the player
         if (bullet.canCollideWithPlayer() && checkCollision(bullet, player)) {
-          player.takeDamage(bullet.damageAmount); // Damage the player
+          player.damage(bullet.damageAmount); // Damage the player
           bullets.splice(bulletIndex, 1); // Remove bullet
           continue; // Move to the next bullet
         }

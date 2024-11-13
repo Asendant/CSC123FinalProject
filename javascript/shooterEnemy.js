@@ -7,9 +7,20 @@ class ShooterEnemy extends Enemy {
     color,
     health,
     playerObject,
-    moveSpeed
+    moveSpeed,
+    subclass
   ) {
-    super(sizeX, sizeY, startX, startY, color, health, playerObject, moveSpeed);
+    super(
+      sizeX,
+      sizeY,
+      startX,
+      startY,
+      color,
+      health,
+      playerObject,
+      moveSpeed,
+      subclass
+    );
 
     this.shotCooldownTime = 3000; //In milliseconds
     this.lastTimeShot = 0;

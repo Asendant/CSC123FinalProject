@@ -1,5 +1,5 @@
 // Tileset variables
-let grid = []; // 2D array to store the grid
+let backgroundGrid = []; // 2D array to store the grid
 let cols = 8;
 let rows = 8;
 let tileSize;
@@ -9,6 +9,10 @@ const [WIDTH, HEIGHT] = [600, 600];
 
 // Class Variables
 let player;
+
+// Booleans
+let isGameRunning = false;
+let haveControlsBeenDisplayed = false;
 
 function setup() {
   createCanvas(WIDTH, HEIGHT);
@@ -37,26 +41,33 @@ function draw() {
 
   drawGrid();
 
+  if (isGameRunning) {
+    updateBullets();
+    updateEnemies();
+    updatePlayer();
+    drawEnemyAndRoundText();
+  }
+
+  updateGrid();
+  checkCollisions();
+}
+
+function drawEnemyAndRoundText() {
   fill("black");
   text(
     `${enemies.length} enem${enemies.length === 1 ? "y" : "ies"}`,
-    WIDTH - 50,
+    WIDTH - 75,
     50
   );
-
   text(`Round: ${enemyMultiplier}`, 10, 25);
+}
 
+function updatePlayer() {
   player.movePlayer();
   player.drawPlayer();
+}
 
-  if (bullets.length > 0) {
-    bullets.forEach((bullet, index) => {
-      bullet.moveBullet();
-      bullet.drawBullet();
-      if (bullet.getBounces() >= 3) bullets.splice(index, 1);
-    });
-  }
-
+function updateEnemies() {
   if (enemies.length > 0) {
     enemies.map((enemy, index) => {
       enemy.moveEnemy();
@@ -70,16 +81,16 @@ function draw() {
       }
     });
   }
+}
 
-  // Draw and update supply drops
-  supplyDrops.forEach((supplyDrop) => {
-    if (!supplyDrop.hasBeenPickedUp) {
-      supplyDrop.drawSupply();
-    }
-  });
-
-  updateGrid();
-  checkCollisions();
+function updateBullets() {
+  if (bullets.length > 0) {
+    bullets.forEach((bullet, index) => {
+      bullet.moveBullet();
+      bullet.drawBullet();
+      if (bullet.getBounces() >= 3) bullets.splice(index, 1);
+    });
+  }
 }
 
 function drawGrid() {
@@ -87,16 +98,16 @@ function drawGrid() {
 
   // Initialize the 2D grid array
   for (let i = 0; i < cols; i++) {
-    grid[i] = [];
+    backgroundGrid[i] = [];
     for (let j = 0; j < rows; j++) {
       // Store 0 for darker green, 1 for lighter green
-      grid[i][j] = (i + j) % 2;
+      backgroundGrid[i][j] = (i + j) % 2;
     }
   }
   // Loop through the array and draw the tiles based on the values stored
   for (let i = 0; i < cols; i++) {
     for (let j = 0; j < rows; j++) {
-      if (grid[i][j] === 0) {
+      if (backgroundGrid[i][j] === 0) {
         fill(24, 139, 34); // darker green
       } else {
         fill(144, 238, 144); // lighter green

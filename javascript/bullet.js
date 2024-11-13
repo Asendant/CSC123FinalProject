@@ -23,6 +23,7 @@ class Bullet {
 
     this.initialDistance = 0; // Track the distance traveled since firing
     this.ignorePlayerCollisionDistance = 50; // Distance before it can hit the player
+    this.type = "bullet";
   }
 
   moveBullet() {

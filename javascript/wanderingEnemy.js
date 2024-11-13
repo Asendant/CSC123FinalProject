@@ -7,9 +7,20 @@ class WanderingEnemy extends Enemy {
     color,
     health,
     playerObject,
-    moveSpeed
+    moveSpeed,
+    subclass
   ) {
-    super(sizeX, sizeY, startX, startY, color, health, playerObject, moveSpeed);
+    super(
+      sizeX,
+      sizeY,
+      startX,
+      startY,
+      color,
+      health,
+      playerObject,
+      moveSpeed,
+      subclass
+    );
     this.currentXPosToMove = random(0, WIDTH);
     this.currentYPosToMove = random(0, HEIGHT);
   }

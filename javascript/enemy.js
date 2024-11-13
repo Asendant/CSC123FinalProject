@@ -16,7 +16,8 @@ function SpawnEnemies() {
         "red",
         100,
         player,
-        random(0.05, 0.1)
+        random(0.05, 0.1),
+        "melee"
       );
     } else if (enemyType == 2) {
       newEnemy = new ShooterEnemy(
@@ -27,7 +28,8 @@ function SpawnEnemies() {
         "yellow",
         75,
         player,
-        random(0.03, 0.05)
+        random(0.03, 0.05),
+        "shooter"
       );
     } else if (enemyType == 3) {
       newEnemy = new WanderingEnemy(
@@ -38,7 +40,8 @@ function SpawnEnemies() {
         "orange",
         100,
         player,
-        random(0.07, 0.1)
+        random(0.07, 0.1),
+        "wanderer"
       );
     }
 
@@ -63,7 +66,8 @@ class Enemy {
     color,
     health,
     playerObject,
-    moveSpeed
+    moveSpeed,
+    subclass
   ) {
     this.sizeX = sizeX;
     this.sizeY = sizeY;
@@ -74,6 +78,7 @@ class Enemy {
     this.maxHealth = health; // Save the maximum health
     this.playerObject = playerObject;
     this.moveSpeed = moveSpeed;
+    this.subclass = subclass;
   }
 
   drawEnemy() {
