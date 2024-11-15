@@ -12,39 +12,49 @@ let player;
 
 // Booleans
 let isGameRunning = false;
-let showControlsMenu = true;
+let showControlsMenu = false;
+let haveControlsBeenSetup = false;
+let hasPlayerInteracted = false;
 
 // Audio
 let playerShootSound;
+let mainMenuMusic;
+
+function preload() {
+  mainMenuMusic = createAudio("/assets/Audio/mainMenuMusic.mp3");
+}
 
 function setup() {
   createCanvas(WIDTH, HEIGHT);
 
   isGameRunning = false;
-  showControlsMenu = true;
-
-  player = new Player(
-    20,
-    20,
-    0.2,
-    color(29, 255, 13),
-    WIDTH / 2,
-    HEIGHT / 2,
-    100
-  );
+  showControlsMenu = false;
 
   frameRate(75);
 
-  SpawnEnemies();
-
-  setupControls();
+  if (!hasPlayerInteracted) {
+    setUpPrompt();
+  }
+  else {
+    setupControls();
+  }
 
   // Preload Audio
   playerShootSound = loadSound("../assets/Audio/fireballshootsound.mp3");
+  mainMenuMusic.loop();
 }
 
 // Remove cleanup of collected supply drops from draw loop in draw()
 function draw() {
+  if (!hasPlayerInteracted) {
+    promptToInteract();
+    return;
+  }
+
+  if (!haveControlsBeenSetup) {
+    setupControls();
+  }
+
   if (isGameRunning) {
     background(45, 45, 45);
     updateBullets();

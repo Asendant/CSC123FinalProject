@@ -109,8 +109,6 @@ function mouseClicked() {
 }
 
 function restartGame() {
-  console.log("Restarting game...");
-
   // Reset player
   player = new Player(20, 20, 5, color(29, 255, 13), WIDTH / 2, HEIGHT / 2);
 
@@ -120,6 +118,8 @@ function restartGame() {
 
   // Reset any other game variables as needed
   enemyMultiplier = 1;
+
+  mainMenuMusic.play();
 
   // Reinitialize the game (you can call setup here or just reset the variables)
   setup();

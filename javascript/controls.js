@@ -17,6 +17,8 @@ function setupControls() {
 
   // Set the button to center position in window
   button.mousePressed(startGame); // Attach the function
+  haveControlsBeenSetup = true;
+  showControlsMenu = true;
 }
 
 function displayControls() {
@@ -39,9 +41,23 @@ function displayControls() {
 }
 
 function startGame() {
-  isGameRunning = true;
+  mainMenuMusic.stop();
   showControlsMenu = false;
   button.hide(); // Hide the button once clicked
+
+  player = new Player(
+    20,
+    20,
+    0.2,
+    color(29, 255, 13),
+    WIDTH / 2,
+    HEIGHT / 2,
+    100
+  );
+
+  SpawnEnemies();
+
+  isGameRunning = true;
 
   stroke(0); // Add the stroke back when the button is clicked
   strokeWeight(1); // Adjust stroke weight if necessary
