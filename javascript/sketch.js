@@ -40,7 +40,7 @@ function setup() {
   }
 
   // Preload Audio
-  playerShootSound = loadSound("../assets/Audio/fireballshootsound.mp3");
+  playerShootSound = loadSound("/assets/Audio/fireballshootsound.mp3");
   mainMenuMusic.loop();
 }
 
