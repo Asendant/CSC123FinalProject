@@ -81,18 +81,30 @@ class Player {
 }
 
 function mouseClicked() {
+  if (!isGameRunning) return;
+  // Calculate the direction vector
+  let dirX = mouseX - player.xPos;
+  let dirY = mouseY - player.yPos;
+
+  // Normalize the direction vector
+  let magnitude = Math.sqrt(dirX * dirX + dirY * dirY);
+  let normalizedX = dirX / magnitude;
+  let normalizedY = dirY / magnitude;
+
   bullets.push(
     new Bullet(
       10,
-      mouseX - player.xPos,
-      mouseY - player.yPos,
+      normalizedX, // Use the normalized values
+      normalizedY,
       "blue",
       player.xPos,
       player.yPos,
-      0.001,
+      0.3, // Bullet speed
       30
     )
   );
+
+  playerShootSound.play();
 }
 
 function restartGame() {

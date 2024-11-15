@@ -88,7 +88,7 @@ class ShooterEnemy extends Enemy {
         "red", // Bullet color
         this.xPos, // Origin X
         this.yPos, // Origin Y
-        0.1, // Bullet speed
+        0.15, // Bullet speed
         30 // Damage amount
       );
       bullets.push(newBullet); // Add the bullet to the bullets array

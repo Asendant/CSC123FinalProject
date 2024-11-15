@@ -12,11 +12,16 @@ let player;
 
 // Booleans
 let isGameRunning = false;
-let haveControlsBeenDisplayed = false;
 let showControlsMenu = true;
+
+// Audio
+let playerShootSound;
 
 function setup() {
   createCanvas(WIDTH, HEIGHT);
+
+  isGameRunning = false;
+  showControlsMenu = true;
 
   player = new Player(
     20,
@@ -33,6 +38,9 @@ function setup() {
   SpawnEnemies();
 
   setupControls();
+
+  // Preload Audio
+  playerShootSound = loadSound("../assets/Audio/fireballshootsound.mp3");
 }
 
 // Remove cleanup of collected supply drops from draw loop in draw()
@@ -56,10 +64,10 @@ function drawEnemyAndRoundText() {
   fill("black");
   text(
     `${enemies.length} enem${enemies.length === 1 ? "y" : "ies"}`,
-    WIDTH - 75,
-    50
+    enemies.length === 1 ? WIDTH - 55 : WIDTH - 55,
+    25
   );
-  text(`Round: ${enemyMultiplier}`, 10, 25);
+  text(`Round: ${enemyMultiplier - 1}`, 55, 25);
 }
 
 function updatePlayer() {
