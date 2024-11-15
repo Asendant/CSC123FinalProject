@@ -56,10 +56,14 @@ function checkCollisions() {
       ) {
         let bullet = cell.bullets[bulletIndex];
 
-        // Check if the bullet can collide with the player
-        if (bullet.canCollideWithPlayer() && checkCollision(bullet, player)) {
+        // Check for bullet and player collision
+        if (
+          bullet.canCollideWith(player) && // Use the updated shooter logic
+          checkCollision(bullet, player)
+        ) {
           player.damage(bullet.damageAmount); // Damage the player
-          bullets.splice(bulletIndex, 1); // Remove bullet
+          bullets.splice(bullets.indexOf(bullet), 1); // Remove bullet
+          cell.bullets.splice(bulletIndex, 1); // Remove from grid cell
           continue; // Move to the next bullet
         }
 
@@ -71,10 +75,14 @@ function checkCollisions() {
         ) {
           let enemy = cell.enemies[enemyIndex];
 
-          if (bullet.canCollideWithPlayer() && checkCollision(bullet, enemy)) {
+          if (
+            bullet.canCollideWith(enemy) && // Check collision with enemy
+            checkCollision(bullet, enemy)
+          ) {
             // Handle collision with enemy
             enemy.damage(bullet.damageAmount);
-            bullets.splice(bullets.indexOf(bullet), 1);
+            bullets.splice(bullets.indexOf(bullet), 1); // Remove bullet
+            cell.bullets.splice(bulletIndex, 1); // Remove from grid cell
             break; // Exit loop once bullet hits enemy
           }
 
@@ -84,6 +92,7 @@ function checkCollisions() {
           }
         }
 
+        // Check for bullet and supply drop collision
         for (
           let supplyDropIndex = cell.supplyDrops.length - 1;
           supplyDropIndex >= 0;
@@ -91,11 +100,10 @@ function checkCollisions() {
         ) {
           let supplyDrop = cell.supplyDrops[supplyDropIndex];
 
-          console.log(checkCollision(supplyDrop, player));
-
           if (checkCollision(supplyDrop, player)) {
             console.log("Collected");
             supplyDrop.hasBeenPickedUp = true;
+            cell.supplyDrops.splice(supplyDropIndex, 1); // Remove from grid cell
           }
         }
       }

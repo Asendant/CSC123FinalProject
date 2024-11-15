@@ -100,7 +100,8 @@ function mouseClicked() {
       player.xPos,
       player.yPos,
       0.3, // Bullet speed
-      30
+      30,
+      player
     )
   );
 

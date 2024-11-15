@@ -9,7 +9,8 @@ class Bullet {
     originX,
     originY,
     bulletSpeed,
-    damageAmount
+    damageAmount,
+    shooter
   ) {
     this.size = size;
     this.vectorX = vectorX;
@@ -22,7 +23,8 @@ class Bullet {
     this.damageAmount = damageAmount;
 
     this.initialDistance = 0; // Track the distance traveled since firing
-    this.ignorePlayerCollisionDistance = 50; // Distance before it can hit the player
+    this.ignoreShooterCollisionDistance = 50; // Distance before it can hit the shooter
+    this.shooter = shooter; // The entity that fired the bullet
     this.type = "bullet";
   }
 
@@ -71,8 +73,12 @@ class Bullet {
     return this.bounces;
   }
 
-  // Check if the bullet has traveled enough distance to collide with the player
-  canCollideWithPlayer() {
-    return this.initialDistance > this.ignorePlayerCollisionDistance;
+  // Check if the bullet can collide with a given entity
+  canCollideWith(entity) {
+    if (entity === this.shooter) {
+      // Ignore collision with shooter until the bullet has traveled enough distance
+      return this.initialDistance > this.ignoreShooterCollisionDistance;
+    }
+    return true; // Collide with other entities immediately
   }
 }

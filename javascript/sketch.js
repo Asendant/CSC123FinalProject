@@ -46,7 +46,7 @@ function setup() {
 // Remove cleanup of collected supply drops from draw loop in draw()
 function draw() {
   if (isGameRunning) {
-    drawGrid();
+    background(45, 45, 45);
     updateBullets();
     updateEnemies();
     updatePlayer();
@@ -61,7 +61,7 @@ function draw() {
 }
 
 function drawEnemyAndRoundText() {
-  fill("black");
+  fill("white");
   text(
     `${enemies.length} enem${enemies.length === 1 ? "y" : "ies"}`,
     enemies.length === 1 ? WIDTH - 55 : WIDTH - 55,
@@ -96,6 +96,22 @@ function updateBullets() {
     bullets.forEach((bullet, index) => {
       bullet.moveBullet();
       bullet.drawBullet();
+
+      // Check for collisions with enemies
+      enemies.forEach((enemy) => {
+        if (bullet.canCollideWith(enemy) && checkCollision(bullet, enemy)) {
+          enemy.damage(bullet.damageAmount);
+          bullets.splice(index, 1);
+        }
+      });
+
+      // Check for collisions with the player
+      if (bullet.canCollideWith(player) && checkCollision(bullet, player)) {
+        player.damage(bullet.damageAmount);
+        bullets.splice(index, 1);
+      }
+
+      // Remove bullets after 3 bounces
       if (bullet.getBounces() >= 3) bullets.splice(index, 1);
     });
   }

@@ -89,7 +89,8 @@ class ShooterEnemy extends Enemy {
         this.xPos, // Origin X
         this.yPos, // Origin Y
         0.15, // Bullet speed
-        30 // Damage amount
+        30, // Damage amount
+        this
       );
       bullets.push(newBullet); // Add the bullet to the bullets array
     }
