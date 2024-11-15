@@ -21,7 +21,7 @@ let playerShootSound;
 let mainMenuMusic;
 
 function preload() {
-  mainMenuMusic = createAudio("../assets/Audio/mainMenuMusic.mp3");
+  mainMenuMusic = createAudio("/assets/Audio/mainMenuMusic.mp3");
 }
 
 function setup() {
@@ -40,7 +40,7 @@ function setup() {
   }
 
   // Preload Audio
-  playerShootSound = loadSound("../assets/Audio/fireballshootsound.mp3");
+  playerShootSound = loadSound("/assets/Audio/fireballshootsound.mp3");
   mainMenuMusic.loop();
 }
 
