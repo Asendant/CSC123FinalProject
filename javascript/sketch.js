@@ -13,6 +13,7 @@ let player;
 // Booleans
 let isGameRunning = false;
 let haveControlsBeenDisplayed = false;
+let showControlsMenu = true;
 
 function setup() {
   createCanvas(WIDTH, HEIGHT);
@@ -31,25 +32,24 @@ function setup() {
 
   SpawnEnemies();
 
-  // Call the function every 15 seconds (15000 milliseconds)
-  // setInterval(SpawnSupply, 10000);
+  setupControls();
 }
 
 // Remove cleanup of collected supply drops from draw loop in draw()
 function draw() {
-  background(220);
-
-  drawGrid();
-
   if (isGameRunning) {
+    drawGrid();
     updateBullets();
     updateEnemies();
     updatePlayer();
     drawEnemyAndRoundText();
+    updateGrid();
+    checkCollisions();
   }
 
-  updateGrid();
-  checkCollisions();
+  if (showControlsMenu) {
+    displayControls();
+  }
 }
 
 function drawEnemyAndRoundText() {
