@@ -34,15 +34,20 @@ function setup() {
 
   if (!hasPlayerInteracted) {
     setUpPrompt();
-  }
-  else {
+  } else {
     setupControls();
   }
 
   // Preload Audio
   playerShootSound = loadSound("/assets/Audio/fireballshootsound.mp3");
   mainMenuMusic.loop();
+
+  // Initialize EXP variables (if not already in another file)
+  currentPlayerLevel = 1;
+  currentEXP = 0;
+  expToNextLevel = baseEXP; // Defined in the leveling script
 }
+
 
 // Remove cleanup of collected supply drops from draw loop in draw()
 function draw() {
@@ -57,12 +62,17 @@ function draw() {
 
   if (isGameRunning) {
     background(45, 45, 45);
+
+    // Update and draw game elements
     updateBullets();
     updateEnemies();
     updatePlayer();
     drawEnemyAndRoundText();
     updateGrid();
     checkCollisions();
+
+    // Draw the EXP bar
+    drawEXPBar(); // Calls the function from the leveling script
   }
 
   if (showControlsMenu) {
@@ -74,10 +84,10 @@ function drawEnemyAndRoundText() {
   fill("white");
   text(
     `${enemies.length} enem${enemies.length === 1 ? "y" : "ies"}`,
-    enemies.length === 1 ? WIDTH - 55 : WIDTH - 55,
-    25
+    enemies.length === 1 ? WIDTH - 25 : WIDTH - 25,
+    HEIGHT - 20
   );
-  text(`Round: ${enemyMultiplier - 1}`, 55, 25);
+  text(`Round: ${enemyMultiplier - 1}`, 90, HEIGHT - 20);
 }
 
 function updatePlayer() {
