@@ -38,21 +38,14 @@ class WanderingEnemy extends Enemy {
       this.currentYPosToMove = random(0, HEIGHT);
     }
 
-    let xDirectionToMove = this.currentXPosToMove - this.xPos;
-    let yDirectionToMove = this.currentYPosToMove - this.yPos;
+    const xDirection = this.currentXPosToMove - this.xPos;
+    const yDirection = this.currentYPosToMove - this.yPos;
+    const distance = Math.sqrt(xDirection ** 2 + yDirection ** 2);
 
-    // Calculate the distance between the enemy and the player
-    let distance = Math.sqrt(xDirectionToMove ** 2 + yDirectionToMove ** 2);
-
-    // Normalize the direction vector to get a unit vector
     if (distance > 0) {
-      xDirectionToMove /= distance;
-      yDirectionToMove /= distance;
+      this.xPos += (xDirection / distance) * deltaTime * this.moveSpeed;
+      this.yPos += (yDirection / distance) * deltaTime * this.moveSpeed;
     }
-
-    // Update the position of the enemy based on the move speed
-    this.xPos += xDirectionToMove * deltaTime * this.moveSpeed;
-    this.yPos += yDirectionToMove * deltaTime * this.moveSpeed;
 
     if (
       dist(
@@ -63,7 +56,6 @@ class WanderingEnemy extends Enemy {
       ) < 35
     ) {
       this.playerObject.damage(2);
-      return;
     }
   }
 }

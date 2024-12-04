@@ -1,5 +1,3 @@
-let bullets = [];
-
 class Bullet {
   constructor(
     size,
@@ -19,46 +17,31 @@ class Bullet {
     this.xPos = originX;
     this.yPos = originY;
     this.bulletSpeed = bulletSpeed;
-    this.bounces = 0;
+    this.bounces = 0; // Track the number of bounces
     this.damageAmount = damageAmount;
-
-    this.initialDistance = 0; // Track the distance traveled since firing
-    this.ignoreShooterCollisionDistance = 50; // Distance before it can hit the shooter
-    this.shooter = shooter; // The entity that fired the bullet
-    this.type = "bullet";
+    this.initialDistance = 0; // Distance traveled by the bullet
+    this.ignoreShooterCollisionDistance = 50; // Minimum distance before the bullet can hit the shooter
+    this.shooter = shooter;
   }
 
   moveBullet() {
-    let movementX = this.vectorX * this.bulletSpeed * deltaTime;
-    let movementY = this.vectorY * this.bulletSpeed * deltaTime;
+    const movementX = this.vectorX * this.bulletSpeed * deltaTime;
+    const movementY = this.vectorY * this.bulletSpeed * deltaTime;
 
-    // Update the bullet's position
     this.xPos += movementX;
     this.yPos += movementY;
 
-    // Update the distance the bullet has traveled
-    this.initialDistance += Math.sqrt(
-      movementX * movementX + movementY * movementY
-    );
+    // Track the distance traveled
+    this.initialDistance += Math.sqrt(movementX ** 2 + movementY ** 2);
 
-    // Clamp bullet position to prevent it from going out of the grid bounds
-    this.xPos = constrain(this.xPos, 0, WIDTH);
-    this.yPos = constrain(this.yPos, 0, HEIGHT);
-
-    // Check for bounces
-    if (this.xPos >= WIDTH || this.xPos <= 0) {
+    // Handle bounces off boundaries
+    if (this.xPos <= 0 || this.xPos >= WIDTH) {
       this.vectorX = -this.vectorX;
-      this.bounces += 1;
+      this.bounces++;
     }
-
-    if (this.yPos >= HEIGHT || this.yPos <= 0) {
+    if (this.yPos <= 0 || this.yPos >= HEIGHT) {
       this.vectorY = -this.vectorY;
-      this.bounces += 1;
-    }
-
-    // Stop the bullet after 3 bounces
-    if (this.bounces >= 3) {
-      return;
+      this.bounces++;
     }
   }
 
@@ -70,15 +53,18 @@ class Bullet {
   }
 
   getBounces() {
-    return this.bounces;
+    return this.bounces; // Return the number of bounces
   }
 
-  // Check if the bullet can collide with a given entity
   canCollideWith(entity) {
-    if (entity === this.shooter) {
-      // Ignore collision with shooter until the bullet has traveled enough distance
-      return this.initialDistance > this.ignoreShooterCollisionDistance;
+    if (
+      entity === this.shooter &&
+      this.initialDistance <= this.ignoreShooterCollisionDistance
+    ) {
+      return false; // Prevent self-collision too early
     }
-    return true; // Collide with other entities immediately
+    return true;
   }
 }
+
+bullets = [];

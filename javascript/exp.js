@@ -8,74 +8,50 @@ let playerSpeedIncrement = 0.03;
 let playerBaseDamage = 30;
 
 const GROWTH_FACTOR_EXP = 1.5;
-const GROWTH_FACTOR_DAMAGE = 0.75;
 
-let displayedEXP = 0; // Smoothly animates the EXP display
+let displayedEXP = 0;
 
-// Level-up logic
 const levelUp = () => {
-  console.log(`Level Up! New Level: ${currentPlayerLevel}`);
-  currentPlayerLevel += 1;
+  currentPlayerLevel++;
   currentEXP = 0;
 
-  // Scale EXP
   expToNextLevel = baseEXP * Math.pow(currentPlayerLevel, GROWTH_FACTOR_EXP);
 
-  // Update stats (ensure bullet damage does not decrease)
   player.speed = basePlayerSpeed + currentPlayerLevel * playerSpeedIncrement;
+  player.bulletDamage = playerBaseDamage + (currentPlayerLevel - 1) * 5; // Bullet damage scales positively
 
-  // Fix bullet damage to always increase or remain constant
-  const damageIncrement = 5; // Increase damage by a fixed amount per level
-  player.bulletDamage = Math.max(
-    playerBaseDamage,
-    playerBaseDamage + (currentPlayerLevel - 1) * damageIncrement
-  );
-
-  // Debugging info
-  console.log(`EXP to Next Level: ${expToNextLevel}`);
-  console.log(`Player Speed: ${player.speed}`);
-  console.log(`Bullet Damage: ${player.bulletDamage}`);
+  console.log(`Level Up! New Level: ${currentPlayerLevel}`);
 };
 
-// Add EXP logic
 const addEXPToCurrentLevel = (expToAdd) => {
   currentEXP += expToAdd;
 
-  // Handle multiple level-ups
   while (currentEXP >= expToNextLevel) {
-    currentEXP -= expToNextLevel; // Carry over excess EXP
+    currentEXP -= expToNextLevel;
     levelUp();
   }
 };
 
-// p5.js draw function
 function drawEXPBar() {
-  let barWidth = 400;
-  let barHeight = 30;
-  let barX = (WIDTH - barWidth) / 2;
-  let barY = 10;
+  const barWidth = 400;
+  const barHeight = 30;
+  const barX = (WIDTH - barWidth) / 2;
+  const barY = 10;
 
-  // Smoothly update the displayed EXP
   displayedEXP = lerp(displayedEXP, currentEXP, 0.1);
 
-  // Calculate progress
-  let progress = displayedEXP / expToNextLevel;
+  const progress = displayedEXP / expToNextLevel;
 
-  // Get the bar color based on progress
-  let barColor = getBarColor(progress);
-
-  // Draw the outer bar
+  push();
   fill(50);
   rect(barX, barY, barWidth, barHeight);
 
-  // Draw the inner progress bar with dynamic color
-  fill(barColor);
+  fill(getBarColor(progress));
   rect(barX, barY, barWidth * progress, barHeight);
 
-  // Draw text
   fill(255);
-  textAlign(LEFT, CENTER);
   textSize(16);
+  textAlign(LEFT, CENTER);
   text(
     `${Math.floor(displayedEXP)}/${Math.floor(expToNextLevel)}`,
     barX - 80,
@@ -88,27 +64,23 @@ function drawEXPBar() {
     barX + barWidth + 80,
     barY + barHeight / 2
   );
+  pop();
 }
 
 function getBarColor(progress) {
   let r, g, b;
-
   if (progress < 0.33) {
-    // Red to Orange
     r = 255;
-    g = map(progress, 0, 0.33, 0, 165); // Green increases
+    g = map(progress, 0, 0.33, 0, 165);
     b = 0;
   } else if (progress < 0.66) {
-    // Orange to Yellow
     r = 255;
-    g = 165 + map(progress, 0.33, 0.66, 0, 90); // Green increases
+    g = 165 + map(progress, 0.33, 0.66, 0, 90);
     b = 0;
   } else {
-    // Yellow to Green
-    r = map(progress, 0.66, 1, 255, 0); // Red decreases
+    r = map(progress, 0.66, 1, 255, 0);
     g = 255;
     b = 0;
   }
-
   return color(r, g, b);
 }

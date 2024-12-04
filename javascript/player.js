@@ -1,40 +1,28 @@
 class Player {
-  constructor(sizeX, sizeY, speed, color, startX, startY, health) {
-    [
-      this.sizeX,
-      this.sizeY,
-      this.speed,
-      this.color,
-      this.xPos,
-      this.yPos,
-      this.health,
-    ] = [sizeX, sizeY, speed, color, startX, startY, health || 100];
-    this.maxHealth = health; // Store max health for health bar
+  constructor(sizeX, sizeY, speed, color, startX, startY, health = 100) {
+    this.sizeX = sizeX;
+    this.sizeY = sizeY;
+    this.speed = speed;
+    this.color = color;
+    this.xPos = startX;
+    this.yPos = startY;
+    this.health = health;
+    this.maxHealth = health;
     this.bulletDamage = 30;
+    this.shootingCooldown = 150; // Milliseconds between shots
+    this.lastShotTime = 0; // Timestamp of the last shot
   }
 
   movePlayer() {
     let moveX = 0;
     let moveY = 0;
 
-    if ((keyIsDown(65) || keyIsDown(37)) && this.xPos - 1 > 0) {
-      moveX -= 1;
-    }
-    if (
-      (keyIsDown(68) || keyIsDown(39)) &&
-      this.xPos + 1 < WIDTH - this.sizeX
-    ) {
+    if ((keyIsDown(65) || keyIsDown(37)) && this.xPos - 1 > 0) moveX -= 1;
+    if ((keyIsDown(68) || keyIsDown(39)) && this.xPos + 1 < WIDTH - this.sizeX)
       moveX += 1;
-    }
-    if ((keyIsDown(87) || keyIsDown(38)) && this.yPos - 1 > 0) {
-      moveY -= 1;
-    }
-    if (
-      (keyIsDown(83) || keyIsDown(40)) &&
-      this.yPos + 1 < HEIGHT - this.sizeY
-    ) {
+    if ((keyIsDown(87) || keyIsDown(38)) && this.yPos - 1 > 0) moveY -= 1;
+    if ((keyIsDown(83) || keyIsDown(40)) && this.yPos + 1 < HEIGHT - this.sizeY)
       moveY += 1;
-    }
 
     this.xPos += moveX * this.speed * deltaTime;
     this.yPos += moveY * this.speed * deltaTime;
@@ -45,92 +33,79 @@ class Player {
     fill(this.color);
     rect(this.xPos, this.yPos, this.sizeX, this.sizeY);
     pop();
-
-    // Draw the health bar above the player
     this.drawHealthBar();
   }
 
   drawHealthBar() {
-    const barWidth = this.sizeX; // Health bar width is same as player width
-    const barHeight = 5; // Height of the health bar
-    const healthPercentage = this.health / this.maxHealth; // Health percentage
+    const barWidth = this.sizeX;
+    const barHeight = 5;
+    const healthPercentage = this.health / this.maxHealth;
 
-    const barX = this.xPos;
-    const barY = this.yPos - barHeight - 5; // 5 pixels above the player
-
-    // Draw background bar (total health)
     push();
-    fill(255, 0, 0); // Red for total health
-    rect(barX, barY, barWidth, barHeight);
-
-    // Draw foreground bar (current health)
-    fill(0, 255, 0); // Green for current health
-    rect(barX, barY, barWidth * healthPercentage, barHeight);
+    fill(255, 0, 0);
+    rect(this.xPos, this.yPos - barHeight - 5, barWidth, barHeight);
+    fill(0, 255, 0);
+    rect(
+      this.xPos,
+      this.yPos - barHeight - 5,
+      barWidth * healthPercentage,
+      barHeight
+    );
     pop();
   }
 
-  // Function to apply damage to the player
   damage(amount) {
     this.health -= amount;
 
     shouldShowDamageIndicator = true;
-
-    setInterval(() => {
-      shouldShowDamageIndicator = false;
-    }, 175);
+    setTimeout(() => (shouldShowDamageIndicator = false), 175);
 
     if (this.health <= 0) {
-      this.health = 0; // Prevent health from going negative
-      // Handle player death (if needed)
+      this.health = 0;
       console.log("Player is dead");
-      restartGame();
+      isGameOver = true;
+      isGameRunning = false;
+    }
+  }
+
+  shoot(mouseX, mouseY) {
+    const currentTime = millis();
+    if (currentTime - this.lastShotTime >= this.shootingCooldown) {
+      this.lastShotTime = currentTime;
+
+      // Calculate direction vector from player to mouse
+      const directionX = mouseX - (this.xPos + this.sizeX / 2);
+      const directionY = mouseY - (this.yPos + this.sizeY / 2);
+      const magnitude = Math.sqrt(directionX ** 2 + directionY ** 2);
+
+      if (magnitude > 0) {
+        const normalizedX = directionX / magnitude;
+        const normalizedY = directionY / magnitude;
+
+        // Create and add a new bullet
+        bullets.push(
+          new Bullet(
+            10, // Size of the bullet
+            normalizedX,
+            normalizedY,
+            "white", // Bullet color
+            this.xPos + this.sizeX / 2, // Start position (center of the player)
+            this.yPos + this.sizeY / 2,
+            0.5, // Bullet speed
+            this.bulletDamage, // Bullet damage
+            this
+          )
+        );
+
+        // Play shooting sound
+        if (playerShootSound) playerShootSound.play();
+      }
     }
   }
 }
 
-function mouseClicked() {
-  if (!isGameRunning) return;
-  // Calculate the direction vector
-  let dirX = mouseX - player.xPos;
-  let dirY = mouseY - player.yPos;
-
-  // Normalize the direction vector
-  let magnitude = Math.sqrt(dirX * dirX + dirY * dirY);
-  let normalizedX = dirX / magnitude;
-  let normalizedY = dirY / magnitude;
-
-  bullets.push(
-    new Bullet(
-      10,
-      normalizedX, // Use the normalized values
-      normalizedY,
-      "blue",
-      player.xPos,
-      player.yPos,
-      0.3, // Bullet speed
-      player.bulletDamage,
-      player
-    )
-  );
-
-  console.log(this.damage);
-
-  playerShootSound.play();
-}
-
-function restartGame() {
-  // Reset player
-  player = new Player(20, 20, 5, color(29, 255, 13), WIDTH / 2, HEIGHT / 2);
-
-  // Clear bullets and enemies
-  bullets = [];
-  enemies = [];
-
-  // Reset any other game variables as needed
-  enemyMultiplier = 1;
-
-  mainMenuMusic.play();
-
-  // Reinitialize the game (you can call setup here or just reset the variables)
-  setup();
+function mousePressed() {
+  if (isGameRunning && player) {
+    player.shoot(mouseX, mouseY);
+  }
 }
