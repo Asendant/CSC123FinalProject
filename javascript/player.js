@@ -10,6 +10,7 @@ class Player {
       this.health,
     ] = [sizeX, sizeY, speed, color, startX, startY, health || 100];
     this.maxHealth = health; // Store max health for health bar
+    this.bulletDamage = 30;
   }
 
   movePlayer() {
@@ -71,6 +72,13 @@ class Player {
   // Function to apply damage to the player
   damage(amount) {
     this.health -= amount;
+
+    shouldShowDamageIndicator = true;
+
+    setInterval(() => {
+      shouldShowDamageIndicator = false;
+    }, 175);
+
     if (this.health <= 0) {
       this.health = 0; // Prevent health from going negative
       // Handle player death (if needed)
@@ -100,10 +108,12 @@ function mouseClicked() {
       player.xPos,
       player.yPos,
       0.3, // Bullet speed
-      30,
+      player.bulletDamage,
       player
     )
   );
+
+  console.log(this.damage);
 
   playerShootSound.play();
 }

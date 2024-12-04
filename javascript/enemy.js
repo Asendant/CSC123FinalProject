@@ -14,7 +14,7 @@ function SpawnEnemies() {
         random(100, WIDTH - 100),
         random(100, HEIGHT - 100),
         "red",
-        100,
+        Math.pow(1.75, enemyMultiplier) + 100,
         player,
         random(0.05, 0.1),
         "melee"

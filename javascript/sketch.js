@@ -15,10 +15,14 @@ let isGameRunning = false;
 let showControlsMenu = false;
 let haveControlsBeenSetup = false;
 let hasPlayerInteracted = false;
+let shouldShowDamageIndicator;
 
 // Audio
 let playerShootSound;
 let mainMenuMusic;
+
+// Colors
+let damageColor;
 
 function preload() {
   mainMenuMusic = createAudio("/assets/Audio/mainMenuMusic.mp3");
@@ -46,8 +50,10 @@ function setup() {
   currentPlayerLevel = 1;
   currentEXP = 0;
   expToNextLevel = baseEXP; // Defined in the leveling script
-}
 
+  damageColor = color(244, 106, 93);
+  damageColor.setAlpha(255 / 2);
+}
 
 // Remove cleanup of collected supply drops from draw loop in draw()
 function draw() {
@@ -73,6 +79,13 @@ function draw() {
 
     // Draw the EXP bar
     drawEXPBar(); // Calls the function from the leveling script
+
+    if (shouldShowDamageIndicator) {
+      push();
+      fill(damageColor);
+      rect(0, 0, WIDTH, HEIGHT);
+      pop();
+    }
   }
 
   if (showControlsMenu) {
@@ -106,6 +119,8 @@ function updateEnemies() {
         if (enemies.length <= 0) {
           setTimeout(SpawnEnemies, 5000);
         }
+
+        addEXPToCurrentLevel(50 * (enemyMultiplier / 2));
       }
     });
   }
