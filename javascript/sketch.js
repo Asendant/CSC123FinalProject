@@ -77,15 +77,12 @@ function draw() {
     updateGrid();
     checkCollisions();
 
+    handleEXPOrbs();
+
     // Draw the EXP bar
     drawEXPBar(); // Calls the function from the leveling script
 
-    if (shouldShowDamageIndicator) {
-      push();
-      fill(damageColor);
-      rect(0, 0, WIDTH, HEIGHT);
-      pop();
-    }
+    showDamageIndicator();
   }
 
   if (showControlsMenu) {
@@ -120,7 +117,21 @@ function updateEnemies() {
           setTimeout(SpawnEnemies, 5000);
         }
 
-        addEXPToCurrentLevel(50 * (enemyMultiplier / 2));
+        // Spawn EXP orbs with animation and scaling
+        const numOrbs = Math.round(random(3, 5)); // Spawn between 3 and 5 orbs
+        for (let i = 0; i < numOrbs; i++) {
+          const angle = random(TWO_PI);
+          const distance = random(50, 100); // Random distance for target position
+          const orbX = enemy.xPos + cos(angle) * distance;
+          const orbY = enemy.yPos + sin(angle) * distance;
+
+          // Scale EXP amount with round difficulty
+          const baseExpAmount = random(10, 30); // Base EXP value
+          const scaledExpAmount = Math.round(baseExpAmount * enemyMultiplier); // Scale with difficulty
+          expOrbs.push(
+            new ExpOrb(enemy.xPos, enemy.yPos, orbX, orbY, 10, scaledExpAmount)
+          );
+        }
       }
     });
   }
@@ -150,4 +161,28 @@ function updateBullets() {
       if (bullet.getBounces() >= 3) bullets.splice(index, 1);
     });
   }
+}
+
+function showDamageIndicator() {
+  if (shouldShowDamageIndicator) {
+    push();
+    fill(damageColor);
+    rect(0, 0, WIDTH, HEIGHT);
+    pop();
+  }
+}
+
+function handleEXPOrbs() {
+  expOrbs.forEach((orb, index) => {
+    orb.draw();
+    orb.move();
+    if (orb.checkCollision(player)) {
+      currentEXP += orb.expAmount;
+      expOrbs.splice(index, 1);
+      while (currentEXP >= expToNextLevel) {
+        currentEXP -= expToNextLevel;
+        levelUp();
+      }
+    }
+  });
 }

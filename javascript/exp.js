@@ -21,10 +21,15 @@ const levelUp = () => {
   // Scale EXP
   expToNextLevel = baseEXP * Math.pow(currentPlayerLevel, GROWTH_FACTOR_EXP);
 
-  // Update stats (assumes player object is defined elsewhere)
+  // Update stats (ensure bullet damage does not decrease)
   player.speed = basePlayerSpeed + currentPlayerLevel * playerSpeedIncrement;
-  player.bulletDamage =
-    playerBaseDamage * Math.pow(GROWTH_FACTOR_DAMAGE, currentPlayerLevel - 1);
+
+  // Fix bullet damage to always increase or remain constant
+  const damageIncrement = 5; // Increase damage by a fixed amount per level
+  player.bulletDamage = Math.max(
+    playerBaseDamage,
+    playerBaseDamage + (currentPlayerLevel - 1) * damageIncrement
+  );
 
   // Debugging info
   console.log(`EXP to Next Level: ${expToNextLevel}`);
