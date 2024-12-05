@@ -82,14 +82,16 @@ function updateEnemies() {
       enemy.moveEnemy();
       enemy.drawEnemy();
 
-      // Remove enemy if health reaches zero
       if (enemy.health <= 0) {
-        spawnEXPOrbs(enemy);
+        if (enemy instanceof Boss) {
+          console.log("Boss defeated!");
+        } else {
+          spawnEXPOrbs(enemy);
+        }
         enemies.splice(index, 1);
       }
     });
 
-    // Respawn enemies after a delay if all are defeated
     if (enemies.length === 0) {
       setTimeout(SpawnEnemies, 5000);
     }
