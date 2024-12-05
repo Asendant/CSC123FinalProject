@@ -60,6 +60,9 @@ function checkCollisions() {
       ) {
         let bullet = cell.bullets[bulletIndex];
 
+        // Update bullet position
+        bullet.moveBullet();
+
         // Check for bullet and player collision
         if (bullet.canCollideWith(player) && checkCollision(bullet, player)) {
           player.damage(bullet.damageAmount);
@@ -82,14 +85,9 @@ function checkCollisions() {
             cell.bullets.splice(bulletIndex, 1);
             break;
           }
-
-          if (checkCollision(enemy, player)) {
-            player.damage(20);
-          }
         }
       }
 
-      // Check for supply drop collisions
       // Check for supply drop collisions
       for (
         let supplyDropIndex = cell.supplyDrops.length - 1;
@@ -98,7 +96,6 @@ function checkCollisions() {
       ) {
         let drop = cell.supplyDrops[supplyDropIndex];
 
-        // Spherical collision for supply drops
         if (checkCollision(player, drop, true)) {
           drop.restoreHealth(player);
           supplyDrops.splice(supplyDrops.indexOf(drop), 1);
@@ -109,7 +106,7 @@ function checkCollisions() {
   );
 }
 
-// Simple bounding box collision check
+// Simple bounding box or spherical collision check
 function checkCollision(obj1, obj2, useSpherical = false) {
   if (useSpherical) {
     // Spherical collision detection
@@ -119,7 +116,7 @@ function checkCollision(obj1, obj2, useSpherical = false) {
       obj2.xPos,
       obj2.yPos
     );
-    const combinedRadius = obj1.size / 2 + obj2.size / 2; // Assumes size represents diameter
+    const combinedRadius = obj1.size / 2 + obj2.size / 2;
     return distance < combinedRadius;
   } else {
     // Bounding box collision detection

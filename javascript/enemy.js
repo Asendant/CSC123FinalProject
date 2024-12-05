@@ -1,14 +1,23 @@
 let enemies = [];
-let enemyMultiplier = 4;
+let enemyMultiplier = 1;
 
 function SpawnEnemies() {
   if (enemies.length > 0) return;
 
   if (enemyMultiplier % 5 === 0) {
     // Spawn boss
-    const bossHealth = Math.round(200 * Math.pow(1.2, currentPlayerLevel - 1));
+    const bossHealth = Math.round(200 * Math.pow(1.2, enemyMultiplier - 1));
     enemies.push(
-      new Boss(50, 50, WIDTH / 2, HEIGHT / 2, "red", bossHealth, player, 0.03)
+      new Boss(
+        50,
+        50,
+        random(100, WIDTH - 100),
+        random(100, HEIGHT - 100),
+        "red",
+        bossHealth,
+        player,
+        0.03
+      )
     );
   } else {
     // Normal enemy spawning logic

@@ -16,12 +16,14 @@ class Bullet {
     this.color = color;
     this.xPos = originX;
     this.yPos = originY;
+    this.originX = originX;
+    this.originY = originY;
     this.bulletSpeed = bulletSpeed;
-    this.bounces = 0; // Track the number of bounces
+    this.bounces = 0;
     this.damageAmount = damageAmount;
-    this.initialDistance = 0; // Distance traveled by the bullet
-    this.ignoreShooterCollisionDistance = 50; // Minimum distance before the bullet can hit the shooter
-    this.shooter = shooter;
+    this.shooter = shooter; // Entity that fired the bullet
+    this.distanceTraveled = 0; // Track the distance traveled
+    this.minimumSafeDistance = 50; // Safe distance before it can hurt the shooter
   }
 
   moveBullet() {
@@ -31,8 +33,8 @@ class Bullet {
     this.xPos += movementX;
     this.yPos += movementY;
 
-    // Track the distance traveled
-    this.initialDistance += Math.sqrt(movementX ** 2 + movementY ** 2);
+    // Update distance traveled
+    this.distanceTraveled += Math.sqrt(movementX ** 2 + movementY ** 2);
 
     // Handle bounces off boundaries
     if (this.xPos <= 0 || this.xPos >= WIDTH) {
@@ -59,13 +61,11 @@ class Bullet {
   }
 
   canCollideWith(entity) {
-    if (
-      entity === this.shooter &&
-      this.initialDistance <= this.ignoreShooterCollisionDistance
-    ) {
-      return false; // Prevent self-collision too early
+    // Prevent collisions with shooter within the safe distance
+    if (entity === this.shooter) {
+      return this.distanceTraveled > this.minimumSafeDistance;
     }
-    return true;
+    return true; // Allow collisions with all other entities
   }
 }
 

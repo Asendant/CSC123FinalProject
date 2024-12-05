@@ -85,9 +85,14 @@ function updateEnemies() {
       if (enemy.health <= 0) {
         if (enemy instanceof Boss) {
           console.log("Boss defeated!");
+          // Boss drops 50–100 EXP orbs
+          spawnEXPOrbs(enemy, random(50, 100));
         } else {
-          spawnEXPOrbs(enemy);
+          console.log("Enemy defeated!");
+          // Normal enemies drop 3–5 EXP orbs
+          spawnEXPOrbs(enemy, random(3, 5));
         }
+
         enemies.splice(index, 1);
       }
     });
@@ -98,9 +103,8 @@ function updateEnemies() {
   }
 }
 
-// Spawn EXP orbs when an enemy dies
-function spawnEXPOrbs(enemy) {
-  const numOrbs = Math.round(random(3, 5)); // Spawn 3-5 orbs
+// Spawn EXP orbs
+function spawnEXPOrbs(enemy, numOrbs) {
   for (let i = 0; i < numOrbs; i++) {
     const angle = random(TWO_PI);
     const distance = random(20, 50);
@@ -108,9 +112,9 @@ function spawnEXPOrbs(enemy) {
     const orbY = enemy.yPos + sin(angle) * distance;
 
     // Scale orb EXP based on player level
-    const baseExp = 15; // Minimum EXP per orb
+    const baseExp = 10; // Minimum EXP per orb
     const expScalingFactor = 1.2; // Determines how EXP increases with level
-    const maxAdditionalExp = 150; // Caps additional EXP scaling
+    const maxAdditionalExp = 50; // Caps additional EXP scaling for normal enemies
 
     const orbExp = Math.round(
       baseExp +
