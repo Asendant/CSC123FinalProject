@@ -11,6 +11,7 @@ class Player {
     this.bulletDamage = 30;
     this.shootingCooldown = 150; // Milliseconds between shots
     this.lastShotTime = 0; // Timestamp of the last shot
+    this.size = Math.max(sizeX, sizeY); // New variable for spherical collision detection
   }
 
   movePlayer() {
@@ -73,7 +74,6 @@ class Player {
     if (currentTime - this.lastShotTime >= this.shootingCooldown) {
       this.lastShotTime = currentTime;
 
-      // Calculate direction vector from player to mouse
       const directionX = mouseX - (this.xPos + this.sizeX / 2);
       const directionY = mouseY - (this.yPos + this.sizeY / 2);
       const magnitude = Math.sqrt(directionX ** 2 + directionY ** 2);
@@ -82,7 +82,6 @@ class Player {
         const normalizedX = directionX / magnitude;
         const normalizedY = directionY / magnitude;
 
-        // Create and add a new bullet
         bullets.push(
           new Bullet(
             10, // Size of the bullet
@@ -97,7 +96,6 @@ class Player {
           )
         );
 
-        // Play shooting sound
         if (playerShootSound) playerShootSound.play();
       }
     }

@@ -1,46 +1,64 @@
 class ExpOrb {
-  constructor(x, y, targetX, targetY, size, expAmount) {
-    this.startX = x;
-    this.startY = y;
-    this.x = x;
-    this.y = y;
-    this.targetX = targetX;
-    this.targetY = targetY;
-    this.size = size;
+  constructor(startX, startY, endX, endY, size, expAmount) {
+    this.xPos = startX;
+    this.yPos = startY;
+    this.endX = endX;
+    this.endY = endY;
+    this.size = size; // Orb size (reduced)
     this.expAmount = expAmount;
-    this.animationProgress = 0;
-    this.animationSpeed = 0.05;
-  }
-
-  draw() {
-    fill(this.getColor());
-    noStroke();
-    ellipse(this.x, this.y, this.size);
+    this.colorOffset = random(0, TWO_PI); // Randomized starting point for color animation
+    this.localFrame = 0; // Independent frame counter for this orb
   }
 
   move() {
-    if (this.animationProgress < 1) {
-      this.x = lerp(this.startX, this.targetX, this.animationProgress);
-      this.y = lerp(this.startY, this.targetY, this.animationProgress);
-      this.animationProgress += this.animationSpeed;
-    } else {
-      this.y += Math.sin(frameCount / 20) * 0.5; // Floating effect
-    }
+    this.xPos += (this.endX - this.xPos) * 0.05;
+    this.yPos += (this.endY - this.yPos) * 0.05;
   }
 
-  getColor() {
-    const freq = 0.1;
-    const r = Math.sin(freq * frameCount + 0) * 127 + 128;
-    const g = Math.sin(freq * frameCount + 2) * 127 + 128;
-    const b = Math.sin(freq * frameCount + 4) * 127 + 128;
-    return color(r, g, b);
+  draw() {
+    this.localFrame++; // Increment local frame counter for this orb
+    const animationSpeed = 0.05; // Adjust animation speed
+
+    // Animate color using sin and cos
+    const r = map(
+      sin(this.localFrame * animationSpeed + this.colorOffset),
+      -1,
+      1,
+      100,
+      255
+    );
+    const g = map(
+      sin(this.localFrame * animationSpeed + this.colorOffset + TWO_PI / 3),
+      -1,
+      1,
+      100,
+      255
+    );
+    const b = map(
+      sin(
+        this.localFrame * animationSpeed + this.colorOffset + (2 * TWO_PI) / 3
+      ),
+      -1,
+      1,
+      100,
+      255
+    );
+
+    push();
+    noStroke();
+    fill(r, g, b); // Dynamic color
+    ellipse(this.xPos, this.yPos, this.size * 0.8); // Smaller size
+    pop();
   }
 
   checkCollision(player) {
-    return (
-      dist(this.x, this.y, player.xPos, player.yPos) <
-      this.size / 2 + 5 + (player.sizeX / 2 + 5)
+    const distance = dist(
+      this.xPos,
+      this.yPos,
+      player.xPos + player.sizeX / 2,
+      player.yPos + player.sizeY / 2
     );
+    return distance < this.size / 2 + 5 + (player.sizeX / 2 + 5);
   }
 }
 

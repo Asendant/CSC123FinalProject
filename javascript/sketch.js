@@ -51,10 +51,13 @@ function draw() {
   }
 
   if (isGameRunning) {
-    background(45, 45, 45);
-    updateGameElements();
-    drawEXPBar();
-    showDamageIndicator();
+    updateGrid(); // Update spatial partitioning
+    background(45, 45, 45); // Clear background
+    updateGameElements(); // Update player, bullets, enemies
+    handleEXPOrbs(); // Draw and manage EXP orbs
+    handleSupplyDrops(); // Draw and manage supply drops
+    drawEXPBar(); // Update EXP bar
+    showDamageIndicator(); // Show damage effect
   }
 
   if (showControlsMenu) {
@@ -64,13 +67,12 @@ function draw() {
 
 // Update all game elements during the main loop
 function updateGameElements() {
+  player.movePlayer();
   updateBullets();
   updateEnemies();
-  player.movePlayer();
   player.drawPlayer();
-  drawEnemyAndRoundText();
-  handleEXPOrbs();
-  checkCollisions();
+  handleSupplyDrops();
+  checkCollisions(); // Ensure collisions are checked after updates
 }
 
 // Update enemy behavior

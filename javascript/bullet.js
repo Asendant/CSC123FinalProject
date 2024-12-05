@@ -37,10 +37,12 @@ class Bullet {
     // Handle bounces off boundaries
     if (this.xPos <= 0 || this.xPos >= WIDTH) {
       this.vectorX = -this.vectorX;
+      this.xPos -= movementX * 2;
       this.bounces++;
     }
     if (this.yPos <= 0 || this.yPos >= HEIGHT) {
       this.vectorY = -this.vectorY;
+      this.yPos -= movementY * 2;
       this.bounces++;
     }
   }

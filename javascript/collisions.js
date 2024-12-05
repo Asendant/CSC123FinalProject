@@ -14,7 +14,7 @@ let collisionsGrid = Array(Math.ceil(WIDTH / cellSize))
   .map(() =>
     Array(Math.ceil(HEIGHT / cellSize))
       .fill()
-      .map(() => ({ bullets: [], enemies: [] }))
+      .map(() => ({ bullets: [], enemies: [], supplyDrops: [] }))
   );
 
 function updateGrid() {
@@ -23,19 +23,28 @@ function updateGrid() {
     col.forEach((cell) => {
       cell.bullets = [];
       cell.enemies = [];
+      cell.supplyDrops = [];
     })
   );
 
   // Add bullets to the grid
   bullets.forEach((bullet) => {
     const cell = getGridCell(bullet.xPos, bullet.yPos);
-    collisionsGrid[cell.col][cell.row].bullets.push(bullet);
+    if (cell) collisionsGrid[cell.col][cell.row].bullets.push(bullet);
   });
 
   // Add enemies to the grid
   enemies.forEach((enemy) => {
     const cell = getGridCell(enemy.xPos, enemy.yPos);
-    collisionsGrid[cell.col][cell.row].enemies.push(enemy);
+    if (cell) collisionsGrid[cell.col][cell.row].enemies.push(enemy);
+  });
+
+  // Add supply drops to the grid
+  supplyDrops.forEach((drop) => {
+    const cell = getGridCell(drop.xPos, drop.yPos);
+    if (cell) collisionsGrid[cell.col][cell.row].supplyDrops.push(drop);
+
+    console.log(collisionsGrid[cell.col][cell.row].supplyDrops); // Logs the supplyDrops array, no longer undefined
   });
 }
 
@@ -52,14 +61,11 @@ function checkCollisions() {
         let bullet = cell.bullets[bulletIndex];
 
         // Check for bullet and player collision
-        if (
-          bullet.canCollideWith(player) && // Use the updated shooter logic
-          checkCollision(bullet, player)
-        ) {
-          player.damage(bullet.damageAmount); // Damage the player
-          bullets.splice(bullets.indexOf(bullet), 1); // Remove bullet
-          cell.bullets.splice(bulletIndex, 1); // Remove from grid cell
-          continue; // Move to the next bullet
+        if (bullet.canCollideWith(player) && checkCollision(bullet, player)) {
+          player.damage(bullet.damageAmount);
+          bullets.splice(bullets.indexOf(bullet), 1);
+          cell.bullets.splice(bulletIndex, 1);
+          continue;
         }
 
         // Check for bullet and enemy collision
@@ -70,21 +76,33 @@ function checkCollisions() {
         ) {
           let enemy = cell.enemies[enemyIndex];
 
-          if (
-            bullet.canCollideWith(enemy) && // Check collision with enemy
-            checkCollision(bullet, enemy)
-          ) {
-            // Handle collision with enemy
+          if (bullet.canCollideWith(enemy) && checkCollision(bullet, enemy)) {
             enemy.damage(bullet.damageAmount);
-            bullets.splice(bullets.indexOf(bullet), 1); // Remove bullet
-            cell.bullets.splice(bulletIndex, 1); // Remove from grid cell
-            break; // Exit loop once bullet hits enemy
+            bullets.splice(bullets.indexOf(bullet), 1);
+            cell.bullets.splice(bulletIndex, 1);
+            break;
           }
 
-          // Check if the enemy collides with the player
           if (checkCollision(enemy, player)) {
-            player.damage(20); // Example damage from enemies
+            player.damage(20);
           }
+        }
+      }
+
+      // Check for supply drop collisions
+      // Check for supply drop collisions
+      for (
+        let supplyDropIndex = cell.supplyDrops.length - 1;
+        supplyDropIndex >= 0;
+        supplyDropIndex--
+      ) {
+        let drop = cell.supplyDrops[supplyDropIndex];
+
+        // Spherical collision for supply drops
+        if (checkCollision(player, drop, true)) {
+          drop.restoreHealth(player);
+          supplyDrops.splice(supplyDrops.indexOf(drop), 1);
+          cell.supplyDrops.splice(supplyDropIndex, 1);
         }
       }
     })
@@ -92,11 +110,24 @@ function checkCollisions() {
 }
 
 // Simple bounding box collision check
-function checkCollision(obj1, obj2) {
-  return (
-    obj1.xPos < obj2.xPos + obj2.sizeX &&
-    obj1.xPos + obj1.size > obj2.xPos &&
-    obj1.yPos < obj2.yPos + obj2.sizeY &&
-    obj1.yPos + obj1.size > obj2.yPos
-  );
+function checkCollision(obj1, obj2, useSpherical = false) {
+  if (useSpherical) {
+    // Spherical collision detection
+    const distance = dist(
+      obj1.xPos + obj1.size / 2,
+      obj1.yPos + obj1.size / 2,
+      obj2.xPos,
+      obj2.yPos
+    );
+    const combinedRadius = obj1.size / 2 + obj2.size / 2; // Assumes size represents diameter
+    return distance < combinedRadius;
+  } else {
+    // Bounding box collision detection
+    return (
+      obj1.xPos < obj2.xPos + obj2.sizeX &&
+      obj1.xPos + obj1.size > obj2.xPos &&
+      obj1.yPos < obj2.yPos + obj2.sizeY &&
+      obj1.yPos + obj1.size > obj2.yPos
+    );
+  }
 }
