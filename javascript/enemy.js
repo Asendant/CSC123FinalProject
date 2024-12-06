@@ -1,5 +1,5 @@
 let enemies = [];
-let enemyMultiplier = 1;
+let enemyMultiplier = 4;
 
 function SpawnEnemies() {
   if (enemies.length > 0) return;
