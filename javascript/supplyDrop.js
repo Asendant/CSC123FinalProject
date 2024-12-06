@@ -90,7 +90,6 @@ class SupplyDrop {
       player.maxHealth,
       player.health + this.healthRestoreAmount
     );
-    console.log("Health Restored: ", player.health);
   }
 }
 

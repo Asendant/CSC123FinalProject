@@ -8,6 +8,8 @@ class ExpOrb {
     this.expAmount = expAmount;
     this.colorOffset = random(0, TWO_PI); // Randomized starting point for color animation
     this.localFrame = 0; // Independent frame counter for this orb
+    this.lifetime = 600; // Lifetime in frames (10 seconds at 60 FPS)
+    this.isVisible = true; // Flashing visibility toggle
   }
 
   move() {
@@ -44,11 +46,22 @@ class ExpOrb {
       255
     );
 
-    push();
-    noStroke();
-    fill(r, g, b); // Dynamic color
-    ellipse(this.xPos, this.yPos, this.size * 0.8); // Smaller size
-    pop();
+    // Flashing effect for the last 3 seconds (180 frames)
+    if (this.lifetime <= 180) {
+      this.isVisible = frameCount % 20 < 10; // Toggle visibility every 10 frames
+    } else {
+      this.isVisible = true; // Always visible before the last 3 seconds
+    }
+
+    if (this.isVisible) {
+      push();
+      noStroke();
+      fill(r, g, b); // Dynamic color
+      ellipse(this.xPos, this.yPos, this.size * 0.8); // Smaller size
+      pop();
+    }
+
+    this.lifetime--; // Decrease lifetime
   }
 
   checkCollision(player) {
@@ -59,6 +72,10 @@ class ExpOrb {
       player.yPos + player.sizeY / 2
     );
     return distance < this.size / 2 + 5 + (player.sizeX / 2 + 5);
+  }
+
+  isExpired() {
+    return this.lifetime <= 0; // Check if orb's lifetime has ended
   }
 }
 

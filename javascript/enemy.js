@@ -106,6 +106,8 @@ class Enemy {
     this.playerObject = playerObject;
     this.moveSpeed = moveSpeed;
     this.subclass = subclass;
+    this.isDying = false; // Flag to trigger death animation
+    this.dissolveParticles = []; // Array for dissolve particles
   }
 
   drawEnemy() {
@@ -157,7 +159,27 @@ class Enemy {
   }
 
   damage(amount) {
+    if (this.isDying) return; // Prevent further interaction if dying
+
     this.health -= amount;
-    if (this.health <= 0) this.health = 0;
+
+    // Play hit sound
+    if (enemyHitSound) {
+      const pitch = random(0.9, 1.1);
+      enemyHitSound.rate(pitch);
+      enemyHitSound.play();
+    }
+
+    if (this.health <= 0) {
+      this.health = 0;
+      this.isDying = true;
+
+      // Play destroy sound
+      if (enemyDestroySound) {
+        const pitch = random(0.95, 1.05);
+        enemyDestroySound.rate(pitch);
+        enemyDestroySound.play();
+      }
+    }
   }
 }

@@ -47,7 +47,10 @@ function keyPressed() {
     isInteractPromptBeingShown = false;
     hasPlayerInteracted = true;
 
-    mainMenuMusic.loop();
-    mainMenuMusic.play();
+    if (mainMenuMusic) {
+      mainMenuMusic.loop();
+    } else {
+      console.warn("Main menu music is not loaded.");
+    }
   }
 }

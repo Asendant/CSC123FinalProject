@@ -61,6 +61,12 @@ class Player {
     shouldShowDamageIndicator = true;
     setTimeout(() => (shouldShowDamageIndicator = false), 175);
 
+    if (playerDamageSound) {
+      const pitch = random(0.9, 1.1); // Subtle pitch variation
+      playerDamageSound.rate(pitch);
+      playerDamageSound.play();
+    }
+
     if (this.health <= 0) {
       this.health = 0;
       console.log("Player is dead");
@@ -96,7 +102,13 @@ class Player {
           )
         );
 
-        if (playerShootSound) playerShootSound.play();
+        // Play shooting sound with randomized pitch
+        if (playerShootSound) {
+          const pitch = random(0.8, 1.2); // Generate random pitch
+          playerShootSound.rate(pitch); // Apply pitch variation
+          playerShootSound.play(); // Play sound
+          console.log(`Playing sound at pitch: ${pitch}`); // Debug
+        }
       }
     }
   }

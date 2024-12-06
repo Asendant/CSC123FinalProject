@@ -18,8 +18,23 @@ let damageColor;
 let playerShootSound, mainMenuMusic;
 
 function preload() {
-  mainMenuMusic = createAudio("/assets/Audio/mainMenuMusic.mp3");
   playerShootSound = loadSound("/assets/Audio/fireballshootsound.mp3");
+  playerShootSound.setVolume(0.2);
+
+  playerDamageSound = loadSound("/assets/Audio/damagetaken.mp3");
+  playerDamageSound.setVolume(0.3);
+
+  enemyHitSound = loadSound("/assets/Audio/enemyDamaged.wav"); // Enemy hit sound
+  enemyHitSound.setVolume(0.2);
+
+  enemyDestroySound = loadSound("/assets/Audio/enemyExplosion.wav"); // Enemy destroy sound
+  enemyDestroySound.setVolume(0.25);
+
+  expOrbSound = loadSound("/assets/Audio/expPickup.wav"); // EXP orb sound
+  expOrbSound.setVolume(0.15);
+
+  levelUpSound = loadSound("/assets/Audio/levelup.wav"); // Level-up sound
+  levelUpSound.setVolume(0.3);
 }
 
 function setup() {
@@ -73,6 +88,7 @@ function updateGameElements() {
   player.drawPlayer();
   handleSupplyDrops();
   checkCollisions(); // Ensure collisions are checked after updates
+  drawEnemyAndRoundText();
 }
 
 // Update enemy behavior
@@ -199,14 +215,20 @@ function drawEnemyAndRoundText() {
 
 // Handle EXP orbs: move, draw, and check collisions
 function handleEXPOrbs() {
-  expOrbs.forEach((orb, index) => {
+  expOrbs = expOrbs.filter((orb) => {
+    if (orb.isExpired()) {
+      return false; // Remove expired orbs
+    }
+
     orb.move();
     orb.draw();
 
     if (orb.checkCollision(player)) {
-      addEXPToCurrentLevel(orb.expAmount);
-      expOrbs.splice(index, 1);
+      addEXPToCurrentLevel(orb.expAmount); // Award EXP to player
+      return false; // Remove orb after collection
     }
+
+    return true; // Keep orb if not expired or collected
   });
 }
 
