@@ -6,7 +6,7 @@ function SpawnEnemies() {
 
   if (enemyMultiplier % 5 === 0) {
     // Spawn boss
-    const bossHealth = Math.round(200 * Math.pow(1.2, enemyMultiplier - 1));
+    const bossHealth = Math.round(300 * Math.pow(1.4, enemyMultiplier - 1));
     enemies.push(
       new Boss(
         50,

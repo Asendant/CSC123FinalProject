@@ -7,6 +7,9 @@ let basePlayerSpeed = 0.2;
 let playerSpeedIncrement = 0.03;
 let playerBaseDamage = 30;
 
+const playerBaseHealth = 100;
+const PLAYER_HEALTH_GROWTH_FACTOR = 1.5;
+
 const GROWTH_FACTOR_EXP = 1.5;
 
 let displayedEXP = 0;
@@ -21,6 +24,10 @@ const levelUp = () => {
   currentEXP = 0;
 
   expToNextLevel = baseEXP * Math.pow(currentPlayerLevel, GROWTH_FACTOR_EXP);
+
+  player.health =
+    playerBaseHealth *
+    Math.pow(currentPlayerLevel, PLAYER_HEALTH_GROWTH_FACTOR);
 
   player.speed = basePlayerSpeed + currentPlayerLevel * playerSpeedIncrement;
   player.bulletDamage = playerBaseDamage + (currentPlayerLevel - 1) * 5; // Bullet damage scales positively

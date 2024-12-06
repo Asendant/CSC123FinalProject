@@ -1,4 +1,3 @@
-// Canvas Variables
 const [WIDTH, HEIGHT] = [600, 600];
 
 // Class Variables
@@ -15,26 +14,34 @@ let shouldShowDamageIndicator = false;
 // Global Variables
 let restartButton;
 let damageColor;
-let playerShootSound, mainMenuMusic;
+let playerShootSound;
+let enemyHitSound;
+let enemyDestroySound;
+let expOrbSound;
+let levelUpSound;
+let backgroundMusic;
 
 function preload() {
-  playerShootSound = loadSound("/assets/Audio/fireballshootsound.mp3");
-  playerShootSound.setVolume(0.2);
+  playerShootSound = loadSound("assets/Audio/fireballshootsound.mp3");
+  playerShootSound.setVolume(0.4);
 
-  playerDamageSound = loadSound("/assets/Audio/damagetaken.mp3");
-  playerDamageSound.setVolume(0.3);
+  playerDamageSound = loadSound("assets/Audio/damagetaken.mp3");
+  playerDamageSound.setVolume(0.5);
 
-  enemyHitSound = loadSound("/assets/Audio/enemyDamaged.wav"); // Enemy hit sound
-  enemyHitSound.setVolume(0.2);
+  enemyHitSound = loadSound("assets/Audio/enemyDamaged.wav"); // Enemy hit sound
+  enemyHitSound.setVolume(0.4);
 
-  enemyDestroySound = loadSound("/assets/Audio/enemyExplosion.wav"); // Enemy destroy sound
-  enemyDestroySound.setVolume(0.25);
+  enemyDestroySound = loadSound("assets/Audio/enemyExplosion.wav"); // Enemy destroy sound
+  enemyDestroySound.setVolume(0.45);
 
-  expOrbSound = loadSound("/assets/Audio/expPickup.wav"); // EXP orb sound
-  expOrbSound.setVolume(0.15);
+  expOrbSound = loadSound("assets/Audio/expPickup.wav"); // EXP orb sound
+  expOrbSound.setVolume(0.35);
 
-  levelUpSound = loadSound("/assets/Audio/levelup.wav"); // Level-up sound
-  levelUpSound.setVolume(0.3);
+  levelUpSound = loadSound("assets/Audio/levelup.wav"); // Level-up sound
+  levelUpSound.setVolume(0.5);
+
+  backgroundMusic = loadSound("assets/Audio/backgroundMusic.mp3");
+  backgroundMusic.setVolume(0.3);
 }
 
 function setup() {
@@ -66,6 +73,10 @@ function draw() {
   }
 
   if (isGameRunning) {
+    if (!backgroundMusic.isPlaying()) {
+      backgroundMusic.loop(); // Ensure the music loops
+    }
+
     updateGrid(); // Update spatial partitioning
     background(45, 45, 45); // Clear background
     updateGameElements(); // Update player, bullets, enemies
@@ -73,6 +84,11 @@ function draw() {
     handleSupplyDrops(); // Draw and manage supply drops
     drawEXPBar(); // Update EXP bar
     showDamageIndicator(); // Show damage effect
+  } else {
+    // Stop the music when the game is paused or not running
+    if (backgroundMusic.isPlaying()) {
+      backgroundMusic.stop();
+    }
   }
 
   if (showControlsMenu) {

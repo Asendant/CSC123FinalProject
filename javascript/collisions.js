@@ -43,8 +43,6 @@ function updateGrid() {
   supplyDrops.forEach((drop) => {
     const cell = getGridCell(drop.xPos, drop.yPos);
     if (cell) collisionsGrid[cell.col][cell.row].supplyDrops.push(drop);
-
-    console.log(collisionsGrid[cell.col][cell.row].supplyDrops); // Logs the supplyDrops array, no longer undefined
   });
 }
 

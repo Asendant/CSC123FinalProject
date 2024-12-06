@@ -46,11 +46,5 @@ function keyPressed() {
     // Transition to the main game
     isInteractPromptBeingShown = false;
     hasPlayerInteracted = true;
-
-    if (mainMenuMusic) {
-      mainMenuMusic.loop();
-    } else {
-      console.warn("Main menu music is not loaded.");
-    }
   }
 }

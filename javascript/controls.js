@@ -35,12 +35,6 @@ function displayControls() {
 }
 
 function startGame() {
-  if (mainMenuMusic) {
-    mainMenuMusic.stop();
-  } else {
-    console.warn("Main menu music is not loaded.");
-  }
-
   showControlsMenu = false;
   button.hide();
 
